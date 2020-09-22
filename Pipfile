@@ -16,6 +16,9 @@ flask-sqlalchemy = "*"
 psycopg2 = "*"
 sqlalchemy = "*"
 flask-migrate = "*"
+werkzeug = "*"
+flask-httpauth = "*"
+flask-login = "*"
 
 [requires]
 python_version = "3.8"
