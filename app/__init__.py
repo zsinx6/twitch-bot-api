@@ -1,20 +1,31 @@
-import logging
-
 from flask import Flask
 from flask_migrate import Migrate
+from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
 from app.config import Config
 
+db = SQLAlchemy()
+migrate = Migrate()
+rest_api = Api()
 
-flask_app = Flask(__name__)
-flask_app.config.from_object(Config)
 
-_formatter = "%(levelname)-8s : %(module)-10s : %(funcName)-25s :%(lineno)-3d : %(message)s"
-_logger = logging.getLogger(__name__)
-logging.basicConfig(level=flask_app.config["LOG_LEVEL"], format=_formatter)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-db = SQLAlchemy(flask_app)
-migrate = Migrate(flask_app, db)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-from app import routes, models
+    from app.api import bp as api_bp
+
+    rest_api.init_app(api_bp)
+
+    app.register_blueprint(api_bp, url_prefix="/api")
+
+    app.logger.setLevel(app.config["LOG_LEVEL"])
+
+    return app
+
+
+from app import models
