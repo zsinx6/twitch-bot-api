@@ -2,7 +2,7 @@ from flask import abort, jsonify
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
 
-from app import rest_api, db
+from app import db, rest_api
 from app.api.auth import token_auth
 from app.models import User
 
