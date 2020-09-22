@@ -6,6 +6,8 @@ verify_ssl = true
 [dev-packages]
 flake8 = "*"
 ipdb = "*"
+black = "==20.8b1"
+isort = "*"
 
 [packages]
 flask = "*"
@@ -13,6 +15,7 @@ flask-restful = "*"
 flask-sqlalchemy = "*"
 psycopg2 = "*"
 sqlalchemy = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.8"
