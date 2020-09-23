@@ -2,4 +2,4 @@ all:
 	pipenv run flask run
 
 lint:
-	black . && isort . -s migrations
+	pipenv run black . && pipenv run isort . -s migrations
