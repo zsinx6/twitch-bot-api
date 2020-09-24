@@ -3,7 +3,7 @@ from flask_restful import Resource, abort
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from app.api.auth import token_auth
+from app.api.auth import basic_auth, token_auth
 from app.models import Alert, User
 
 
@@ -59,3 +59,12 @@ class Alerts(Resource):
         except IntegrityError as ex:
             abort(400, message=str(ex))
         return alert
+
+
+class Tokens(Resource):
+    method_decorators = [basic_auth.login_required]
+
+    def get(self):
+        token = basic_auth.current_user().get_token()
+        db.session.commit()
+        return jsonify({"token": token})
