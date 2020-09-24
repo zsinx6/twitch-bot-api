@@ -8,6 +8,8 @@ flake8 = "*"
 ipdb = "*"
 black = "==20.8b1"
 isort = "*"
+pytest-flask-sqlalchemy = "*"
+pytest-postgresql = "*"
 
 [packages]
 flask = "*"
