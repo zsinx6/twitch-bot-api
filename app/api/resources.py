@@ -4,16 +4,16 @@ from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.api.auth import basic_auth, token_auth
-from app.models import Alert, User
+from app.models import Alert, LoginUser, User
 
 
 class Alerts(Resource):
     method_decorators = [token_auth.login_required]
 
     def post(self):
-        document = request.get_json()
-        user = self._create_user(document)
-        alert = self._create_alert(document, user)
+        data = request.get_json()
+        user = self._create_user(data)
+        alert = self._create_alert(data, user)
 
         json_send = {}
         json_send[alert.id] = {
@@ -25,10 +25,10 @@ class Alerts(Resource):
         }
         return jsonify(json_send)
 
-    def _create_user(self, document):
-        username = document.get("username")
-        twitch_id = document.get("twitch_id")
-        profile_image_url = document.get("profile_image_url")
+    def _create_user(self, data):
+        username = data.get("username")
+        twitch_id = data.get("twitch_id")
+        profile_image_url = data.get("profile_image_url")
 
         if not all((username, twitch_id, profile_image_url)):
             abort(400, message="username, twitch_id and profile_image_url should not be empty")
@@ -45,9 +45,9 @@ class Alerts(Resource):
             abort(400, message=str(ex))
         return user
 
-    def _create_alert(self, document, user):
-        channel_id = document.get("channel_id")
-        message_text = document.get("message_text")
+    def _create_alert(self, data, user):
+        channel_id = data.get("channel_id")
+        message_text = data.get("message_text")
 
         if not all((channel_id, message_text)):
             abort(400, message="channel_id and message_text should not be empty")
@@ -68,3 +68,21 @@ class Tokens(Resource):
         token = basic_auth.current_user().get_token()
         db.session.commit()
         return jsonify({"token": token})
+
+
+class LoginUsers(Resource):
+    method_decorators = [token_auth.login_required]
+
+    def post(self):
+        data = request.get_json() or {}
+        if "username" not in data or "password" not in data:
+            abort(400)
+        if LoginUser.query.filter_by(username=data["username"]).first():
+            return abort(400)
+        user = LoginUser()
+        user.from_dict(data, new_user=True)
+        db.session.add(user)
+        db.session.commit()
+        response = jsonify(user.to_dict())
+        response.status_code = 201
+        return response
