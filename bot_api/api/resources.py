@@ -2,9 +2,9 @@ from flask import jsonify, request
 from flask_restful import Resource, abort
 from sqlalchemy.exc import IntegrityError
 
-from app import db
-from app.api.auth import basic_auth, token_auth
-from app.models import Alert, LoginUser, User
+from bot_api import db
+from bot_api.api.auth import basic_auth, token_auth
+from bot_api.models import Alert, LoginUser, User
 
 
 class Alerts(Resource):

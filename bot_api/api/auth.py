@@ -1,7 +1,7 @@
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from flask_restful import abort
 
-from app.models import LoginUser
+from bot_api.models import LoginUser
 
 basic_auth = HTTPBasicAuth()
 token_auth = HTTPTokenAuth()

@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 
-from app.config import Config
+from bot_api.config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -17,7 +17,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.api import bp as api_bp
+    from bot_api.api import bp as api_bp
 
     rest_api.init_app(api_bp)
 
@@ -28,4 +28,4 @@ def create_app(config_class=Config):
     return app
 
 
-from app import models, urls
+from bot_api import models, urls
